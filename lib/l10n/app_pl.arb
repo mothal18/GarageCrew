@@ -1,0 +1,311 @@
+{
+  "@@locale": "pl",
+  "authSignInFailed": "Nie udało się zalogować.",
+  "authSignInFailedWithCode": "Nie udało się zalogować. Kod: {code}",
+  "@authSignInFailedWithCode": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "authSignInFailedWithDetails": "Nie udało się zalogować. Szczegóły: {details}",
+  "@authSignInFailedWithDetails": {
+    "placeholders": {
+      "details": {}
+    }
+  },
+  "authTitle": "Zaloguj się",
+  "authSubtitle": "Dostęp do Twojego garażu w jednym miejscu.",
+  "authLoginLabel": "Login",
+  "authLoginEmpty": "Podaj login.",
+  "authLoginInvalid": "Login: 3-20 znaków, a-z, 0-9 lub _.",
+  "authPasswordLabel": "Hasło",
+  "authPasswordEmpty": "Podaj hasło.",
+  "authPasswordShort": "Hasło musi mieć min. 6 znaków.",
+  "authSignInButton": "Zaloguj",
+  "authCreateAccountButton": "Utwórz konto",
+  "authFooter": "Korzystając z aplikacji akceptujesz regulamin i politykę prywatności.",
+  "authBrandTagline": "Zarządzaj kolekcją Hot Wheels jak profesjonalista.",
+
+  "registerTitle": "Rejestracja",
+  "registerHeader": "Utwórz konto",
+  "registerSubtitle": "Dołącz do MyGarage i buduj swoją kolekcję.",
+  "registerEmailLabel": "Email",
+  "registerEmailEmpty": "Podaj email.",
+  "registerEmailInvalid": "Podaj poprawny email.",
+  "registerPasswordLabel": "Hasło",
+  "registerPasswordEmpty": "Podaj hasło.",
+  "registerPasswordShort": "Hasło musi mieć min. 6 znaków.",
+  "registerCreateAccountButton": "Utwórz konto",
+  "registerHaveAccount": "Masz już konto? Zaloguj się",
+  "registerCreatedCheckEmail": "Konto utworzone. Sprawdź maila, aby potwierdzić konto.",
+  "registerLoginTaken": "Ten login jest już zajęty.",
+  "registerCreateFailed": "Nie udało się utworzyć konta. Spróbuj ponownie.",
+
+  "settingsTitle": "Ustawienia",
+  "settingsNoUser": "Brak zalogowanego użytkownika.",
+  "settingsLoadFailed": "Nie udało się pobrać ustawień.",
+  "settingsSaveGarageNameFailed": "Nie udało się zapisać nazwy garażu.",
+  "settingsSaveFailed": "Nie udało się zapisać ustawień.",
+  "garageNameSection": "Nazwa garażu",
+  "garageNameLabel": "Nazwa wyświetlana",
+  "garageNameHint": "np. Garaż Mothal",
+  "garageNameSaveTooltip": "Zapisz nazwę",
+  "garageNameHelper": "Ta nazwa będzie widoczna dla innych po udostępnieniu garażu.",
+  "publicGarageSection": "Publiczny garaż",
+  "publicGarageNoLogin": "Twój garaż może być publiczny.",
+  "publicGarageWithLogin": "Twój login: {login}",
+  "@publicGarageWithLogin": {
+    "placeholders": {
+      "login": {}
+    }
+  },
+  "publicGarageToggleTitle": "Udostępnij mój garaż publicznie",
+  "publicGarageToggleSubtitle": "Inni będą mogli znaleźć Twój garaż po loginie.",
+
+  "carListSignOutFailed": "Nie udało się wylogować. Spróbuj ponownie.",
+  "carListLoadFailed": "Nie udało się pobrać autek.",
+  "carListSaveCarFailed": "Nie udało się zapisać autka.",
+  "carListSaveChangesFailed": "Nie udało się zapisać zmian.",
+  "carListDeleteFailed": "Nie udało się usunąć autka.",
+  "carLimitReached": "Osiągnięto limit {maxCars} autek w garażu.",
+  "@carLimitReached": {
+    "placeholders": {
+      "maxCars": {}
+    }
+  },
+  "imageLimitReached": "Maksymalnie {maxImages} zdjęć na autko.",
+  "@imageLimitReached": {
+    "placeholders": {
+      "maxImages": {}
+    }
+  },
+  "networkError": "Brak połączenia z internetem. Sprawdź połączenie i spróbuj ponownie.",
+  "unknownError": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.",
+  "carDeleteTitle": "Usunąć autko?",
+  "carDeleteContent": "To autko zostanie usunięte z Twojego garażu.",
+  "cancel": "Anuluj",
+  "delete": "Usuń",
+  "settingsTooltip": "Ustawienia",
+  "logoutTooltip": "Wyloguj",
+  "publicGaragesTooltip": "Publiczne garaże",
+  "garageEmpty": "Twój garaż jest pusty.",
+  "addCar": "Dodaj autko",
+  "searchNoResults": "Brak wyników dla tego wyszukiwania.",
+  "editCarTooltip": "Edytuj autko",
+  "deleteCarTooltip": "Usuń autko",
+  "searchGarageLabel": "Szukaj w garażu",
+  "sortLabel": "Sortowanie",
+  "sortNewest": "Najnowsze",
+  "sortOldest": "Najstarsze",
+  "sortAz": "A-Z",
+  "sortZa": "Z-A",
+
+  "addCarTitle": "Dodaj autko",
+  "editCarTitle": "Edytuj autko",
+  "save": "Zapisz",
+  "carDataSection": "Dane autka",
+  "carNameLabel": "Nazwa / model",
+  "carNameEmpty": "Podaj nazwę autka.",
+  "toyNumberLabel": "Numer Toy",
+  "toyNumberHint": "np. JJJ02",
+  "toyNumberHelper": "Format: 3 wielkie litery + 2 cyfry (ABC12)",
+  "toyNumberEmpty": "Podaj numer Toy.",
+  "toyNumberInvalidFormat": "Nieprawidłowy format. Użyj: 3 litery + 2 cyfry (np. JJJ02)",
+  "toyNumberAlreadyExists": "Ten numer Toy już istnieje w Twoim garażu.",
+  "toyNumberReminderAfterSearch": "Nie zapomnij wpisać numeru Toy!",
+  "carDescriptionLabel": "Opis (opcjonalnie)",
+  "carImageUrlLabel": "URL zdjęcia (opcjonalnie)",
+  "hotWheelsSearchSection": "Wyszukaj w bazie Hot Wheels",
+  "hotWheelsSearchLabel": "Szukaj po nazwie",
+  "hotWheelsSearchFailed": "Nie udało się pobrać wyników.",
+  "hotWheelsSearchHint": "Wpisz przynajmniej 2 znaki, aby wyszukać autko.",
+  "noResults": "Brak wyników.",
+  "saveChanges": "Zapisz zmiany",
+  "addToGarage": "Dodaj do garażu",
+  "useDataTooltip": "Użyj danych",
+
+  "carDetailsTitle": "Szczegóły autka",
+  "noDescription": "Brak opisu.",
+  "imageUrlLabel": "URL zdjęcia",
+  "addedAtLabel": "Dodano",
+
+  "publicGaragesTitle": "Publiczne garaże",
+  "publicSearchLabel": "Szukaj po loginie lub nazwie garażu",
+  "publicSearchTooltip": "Szukaj",
+  "publicSearchHint": "Wpisz co najmniej 2 znaki, aby wyszukać garaż.",
+  "publicSearchNoResults": "Brak wyników.",
+  "publicGarageSubtitle": "Publiczny garaż",
+  "publicGaragesLoadFailed": "Nie udało się pobrać publicznych garaży.",
+  "publicGarageCarsLoadFailed": "Nie udało się pobrać autek.",
+  "publicGarageTitle": "Garaż: {login}",
+  "@publicGarageTitle": {
+    "placeholders": {
+      "login": {}
+    }
+  },
+  "publicGarageEmpty": "Ten garaż jest pusty.",
+
+  "splashLoading": "Ładowanie...",
+  "splashLoadingError": "Błąd ładowania. Spróbuj ponownie.",
+  "splashRetry": "Spróbuj ponownie",
+
+  "appearanceSection": "Wygląd",
+  "darkModeToggleTitle": "Tryb ciemny",
+  "darkModeToggleSubtitle": "Zmień motyw aplikacji na ciemny.",
+  "racingThemeToggleTitle": "Motyw wyścigowy",
+  "racingThemeToggleSubtitle": "Kolorystyka inspirowana stroną GarageCrew.",
+  "themeTooltip": "Zmień motyw",
+
+  "profileSection": "Profil garażu",
+  "avatarUrlLabel": "URL zdjęcia profilowego",
+  "avatarUrlHint": "https://example.com/zdjecie.jpg",
+  "avatarUrlSaveTooltip": "Zapisz zdjęcie",
+  "avatarUrlHelper": "Zdjęcie profilowe widoczne przy Twoim garażu.",
+  "avatarSaveFailed": "Nie udało się zapisać zdjęcia profilowego.",
+  "bioLabel": "Opis profilu",
+  "bioHint": "Napisz coś o sobie lub swojej kolekcji...",
+  "bioSaveTooltip": "Zapisz opis",
+  "bioHelper": "Krótki opis widoczny na Twoim profilu.",
+  "bioSaveFailed": "Nie udało się zapisać opisu.",
+  "carsCount": "{count} {count, plural, =1{autko} few{autka} other{autek}}",
+  "@carsCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "noBio": "Brak opisu.",
+
+  "pickImageTitle": "Wybierz zdjęcie",
+  "pickFromCamera": "Zrób zdjęcie",
+  "pickFromGallery": "Wybierz z galerii",
+  "pickFromUrl": "Wpisz URL",
+  "imageUploadFailed": "Nie udało się przesłać zdjęcia",
+  "imageDeleteConfirm": "Usunąć to zdjęcie?",
+  "galleryEmpty": "Brak zdjęć",
+  "tapToAddImage": "Dotknij, aby dodać zdjęcie",
+  "maxImagesReached": "Maksymalnie {count} zdjęć",
+  "@maxImagesReached": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "imageUploading": "Przesyłanie...",
+  "reorderImages": "Przeciągnij, aby zmienić kolejność",
+  "carImagesSection": "Zdjęcia autka",
+  "addImageButton": "Dodaj zdjęcie",
+
+  "exploreGarages": "Szukaj",
+  "notificationsTitle": "Powiadomienia",
+  "notificationsEmpty": "Brak powiadomień",
+  "notificationsMarkAllRead": "Oznacz wszystkie",
+  "notificationsClearAll": "Wyczyść wszystkie",
+  "notificationsClearConfirmTitle": "Wyczyścić wszystkie powiadomienia?",
+  "notificationsClearConfirmContent": "Ta operacja usunie wszystkie powiadomienia.",
+  "follow": "Obserwuj",
+  "following": "Obserwujesz",
+  "unfollowConfirmTitle": "Przestać obserwować?",
+  "unfollowConfirmContent": "Nie będziesz otrzymywać powiadomień o nowych autkach z tego garażu.",
+  "followersCount": "{count} {count, plural, =1{obserwujący} other{obserwujących}}",
+  "@followersCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "notificationBellTooltip": "Powiadomienia",
+  "justNow": "przed chwilą",
+  "minutesAgo": "{count} min temu",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "hoursAgo": "{count} godz. temu",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "daysAgo": "{count} dni temu",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+
+  "notificationsSection": "Powiadomienia",
+  "notificationsToggleTitle": "Włącz powiadomienia",
+  "notificationsToggleSubtitle": "Otrzymuj powiadomienia o nowych autkach i polubieniach.",
+  "notificationsSaveFailed": "Nie udało się zapisać ustawień powiadomień.",
+
+  "likesCount": "{count} {count, plural, =1{polubienie} few{polubienia} other{polubień}}",
+  "@likesCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "likeTooltip": "Polub",
+  "unlikeTooltip": "Cofnij polubienie",
+  "likedNotificationTitle": "Ktoś polubił Twoje autko",
+  "likedNotificationBody": "{login} polubił(a): {carTitle}",
+  "@likedNotificationBody": {
+    "placeholders": {
+      "login": {},
+      "carTitle": {}
+    }
+  },
+
+  "quantityLabel": "Ilość",
+  "quantityHelper": "Ile kopii tego wariantu posiadasz",
+  "quantityEmpty": "Podaj ilość.",
+  "quantityInvalid": "Ilość musi wynosić co najmniej 1.",
+  "variantLabel": "Wariant (opcjonalnie)",
+  "variantHint": "np. Mint, Otwarty, TH",
+  "variantHelper": "Opisz stan lub specjalną edycję",
+
+  "advancedFilters": "Filtry zaawansowane",
+  "toyNumberPrefixFilter": "Serie Toy #",
+  "toyNumberPrefixAll": "Wszystkie serie",
+  "hasImagesFilter": "Ma zdjęcia",
+  "hasImagesAll": "Wszystkie",
+  "hasImagesYes": "Tak",
+  "hasImagesNo": "Nie",
+  "likesRangeFilter": "Zakres polubień",
+  "dateRangeFilter": "Dodane",
+  "dateRangeLast7Days": "Ostatnie 7 dni",
+  "dateRangeLast30Days": "Ostatnie 30 dni",
+  "dateRangeLast90Days": "Ostatnie 90 dni",
+  "dateRangeAllTime": "Cały czas",
+  "clearFilters": "Wyczyść filtry",
+  "showingXofYCars": "Wyświetlanie {x} z {y} autek",
+  "@showingXofYCars": {
+    "placeholders": {
+      "x": {},
+      "y": {}
+    }
+  },
+
+  "statisticsTitle": "Statystyki",
+  "statisticsTooltip": "Zobacz statystyki",
+  "statisticsLoadFailed": "Nie udało się pobrać statystyk.",
+  "overviewSection": "Przegląd",
+  "popularitySection": "Popularność",
+  "collectionSection": "Kolekcja",
+  "activitySection": "Aktywność",
+  "totalCars": "Łącznie aut",
+  "totalLikes": "Łącznie polubień",
+  "mostLikedCar": "Najbardziej lajkowane",
+  "averageLikes": "Średnia polubień",
+  "carsByToyNumber": "Według serii Toy #",
+  "carsWithImages": "Ze zdjęciami",
+  "carsAddedThisWeek": "Dodane w tym tygodniu",
+  "carsAddedThisMonth": "Dodane w tym miesiącu",
+  "collectionAge": "Wiek kolekcji",
+  "collectionAgeDays": "{days} {days, plural, =1{dzień} few{dni} other{dni}}",
+  "@collectionAgeDays": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "followers": "Obserwujący",
+  "followingCount": "Obserwowanych"
+}
