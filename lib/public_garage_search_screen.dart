@@ -343,36 +343,68 @@ class _PublicGarageDetailScreenState extends State<PublicGarageDetailScreen> {
     try {
       if (_isFollowing) {
         await _followRepository.unfollow(currentUserId, widget.userId);
-        if (!mounted) return;
-        setState(() {
-          _isFollowing = false;
-          _followersCount = (_followersCount - 1).clamp(0, double.maxFinite.toInt());
-        });
       } else {
         await _followRepository.follow(currentUserId, widget.userId);
-        if (!mounted) return;
-        setState(() {
-          _isFollowing = true;
-          _followersCount++;
-        });
       }
-    } catch (error, stackTrace) {
-      ErrorLogger.log(error, stackTrace: stackTrace, context: 'toggleFollow');
-      // Silently ignore errors (don't show to user)
-    } finally {
+
+      // Reload follow status from database to ensure sync
+      if (!mounted) return;
+      final isFollowing = await _followRepository.isFollowing(currentUserId, widget.userId);
+      final followersCount = await _followRepository.getFollowersCount(widget.userId);
+
       if (!mounted) return;
       setState(() {
+        _isFollowing = isFollowing;
+        _followersCount = followersCount;
         _isTogglingFollow = false;
       });
+    } catch (error, stackTrace) {
+      ErrorLogger.log(error, stackTrace: stackTrace, context: 'toggleFollow');
+      if (!mounted) return;
+      // Reload status even on error to ensure UI matches DB
+      try {
+        final isFollowing = await _followRepository.isFollowing(currentUserId, widget.userId);
+        final followersCount = await _followRepository.getFollowersCount(widget.userId);
+        if (!mounted) return;
+        setState(() {
+          _isFollowing = isFollowing;
+          _followersCount = followersCount;
+          _isTogglingFollow = false;
+        });
+      } catch (e) {
+        if (!mounted) return;
+        setState(() {
+          _isTogglingFollow = false;
+        });
+      }
     }
   }
 
-  void _openCarDetails(CarItem car) {
-    Navigator.of(context).push(
+  Future<void> _openCarDetails(CarItem car) async {
+    final result = await Navigator.of(context).push<Map<String, dynamic>?>(
       MaterialPageRoute(
         builder: (_) => _PublicCarDetailScreen(car: car),
       ),
     );
+
+    // Update car in list if likes changed
+    if (result != null && mounted) {
+      final carId = result['carId'] as String?;
+      final isLiked = result['isLiked'] as bool?;
+      final likesCount = result['likesCount'] as int?;
+
+      if (carId != null) {
+        setState(() {
+          final index = _cars.indexWhere((c) => c.id == carId);
+          if (index != -1 && isLiked != null && likesCount != null) {
+            _cars[index] = _cars[index].copyWith(
+              isLiked: isLiked,
+              likesCount: likesCount,
+            );
+          }
+        });
+      }
+    }
   }
 
   @override
@@ -734,53 +766,85 @@ class _PublicCarDetailScreenState extends State<_PublicCarDetailScreen> {
     try {
       if (_isLiked) {
         await _likeRepository.unlike(carId, userId);
-        if (!mounted) return;
-        setState(() {
-          _isLiked = false;
-          _likesCount = (_likesCount - 1).clamp(0, double.maxFinite.toInt());
-        });
       } else {
         await _likeRepository.like(carId, userId);
-        if (!mounted) return;
-        setState(() {
-          _isLiked = true;
-          _likesCount++;
-        });
       }
-    } catch (error, stackTrace) {
-      ErrorLogger.log(error, stackTrace: stackTrace, context: 'toggleLike');
-      // Silently ignore (don't show to user)
-    } finally {
+
+      // Reload like status from database to ensure sync
+      if (!mounted) return;
+      final count = await _likeRepository.getLikesCount(carId);
+      final isLiked = await _likeRepository.isLiked(carId, userId);
+
       if (!mounted) return;
       setState(() {
+        _isLiked = isLiked;
+        _likesCount = count;
         _isTogglingLike = false;
       });
+    } catch (error, stackTrace) {
+      ErrorLogger.log(error, stackTrace: stackTrace, context: 'toggleLike');
+      if (!mounted) return;
+      // Reload status even on error to ensure UI matches DB
+      try {
+        final count = await _likeRepository.getLikesCount(carId);
+        final isLiked = await _likeRepository.isLiked(carId, userId);
+        if (!mounted) return;
+        setState(() {
+          _isLiked = isLiked;
+          _likesCount = count;
+          _isTogglingLike = false;
+        });
+      } catch (e) {
+        if (!mounted) return;
+        setState(() {
+          _isTogglingLike = false;
+        });
+      }
     }
+  }
+
+  void _popWithResult() {
+    Navigator.of(context).pop({
+      'carId': widget.car.id,
+      'isLiked': _isLiked,
+      'likesCount': _likesCount,
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFFF6A00), // Hot Wheels Orange
-                Color(0xFFFF8533), // Lighter Orange
-              ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          _popWithResult();
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFFFF6A00), // Hot Wheels Orange
+                  Color(0xFFFF8533), // Lighter Orange
+                ],
+              ),
             ),
           ),
+          title: Text(l10n.carDetailsTitle),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _popWithResult,
+          ),
+          actions: const [
+            ReturnToGarageButton(),
+          ],
         ),
-        title: Text(l10n.carDetailsTitle),
-        actions: const [
-          ReturnToGarageButton(),
-        ],
-      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -845,6 +909,7 @@ class _PublicCarDetailScreenState extends State<_PublicCarDetailScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }
