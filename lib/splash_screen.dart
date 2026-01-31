@@ -73,6 +73,9 @@ class _SplashScreenState extends State<SplashScreen> {
       await Supabase.initialize(
         url: EnvConfig.supabaseUrl,
         anonKey: EnvConfig.supabaseAnonKey,
+        authOptions: const FlutterAuthClientOptions(
+          authFlowType: AuthFlowType.pkce,
+        ),
       );
     } catch (error, stackTrace) {
       if (_isSupabaseAlreadyInitializedError(error)) {
