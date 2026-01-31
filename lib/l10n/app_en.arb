@@ -37,6 +37,7 @@
   "registerPasswordShort": "Password must be at least 6 characters.",
   "registerCreateAccountButton": "Create account",
   "registerHaveAccount": "Already have an account? Sign in",
+  "registerSuccessTitle": "Success!",
   "registerCreatedCheckEmail": "Account created. Check your email to confirm.",
   "registerLoginTaken": "This login is already taken.",
   "registerCreateFailed": "Couldn't create account. Try again.",

@@ -37,6 +37,7 @@
   "registerPasswordShort": "Hasło musi mieć min. 6 znaków.",
   "registerCreateAccountButton": "Utwórz konto",
   "registerHaveAccount": "Masz już konto? Zaloguj się",
+  "registerSuccessTitle": "Sukces!",
   "registerCreatedCheckEmail": "Konto utworzone. Sprawdź maila, aby potwierdzić konto.",
   "registerLoginTaken": "Ten login jest już zajęty.",
   "registerCreateFailed": "Nie udało się utworzyć konta. Spróbuj ponownie.",

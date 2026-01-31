@@ -40,6 +40,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       errorMessage = null;
     });
 
+    final l10n = AppLocalizations.of(context)!;
+
     try {
       final login = loginController.text.trim().toLowerCase();
       final response = await Supabase.instance.client.auth.signUp(
@@ -60,10 +62,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
 
       if (response.session == null) {
-        setState(() {
-          errorMessage =
-              AppLocalizations.of(context)!.registerCreatedCheckEmail;
-        });
+        // Email verification required - show success dialog
+        if (mounted) {
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => AlertDialog(
+              title: Row(
+                children: [
+                  Icon(Icons.check_circle, color: Colors.green, size: 28),
+                  SizedBox(width: 12),
+                  Text(l10n.registerSuccessTitle),
+                ],
+              ),
+              content: Text(l10n.registerCreatedCheckEmail),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.of(context).pop(); // Return to login screen
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
       } else if (mounted) {
         Navigator.of(context).pop();
       }
