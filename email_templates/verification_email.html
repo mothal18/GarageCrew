@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your GarageCrew Account</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #0F0F0F;
+            color: #F7F7F7;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #081A3A 0%, #0B2D75 100%);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(90deg, #E21A23 0%, #FF6B00 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #F7F7F7;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        .tagline {
+            font-size: 14px;
+            color: #F7F7F7;
+            margin: 8px 0 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        h1 {
+            color: #FFCC33;
+            font-size: 28px;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+        p {
+            color: #CBD5E1;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+        }
+        .highlight {
+            color: #FFCC33;
+            font-weight: 600;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(90deg, #E21A23 0%, #FF6B00 100%);
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(226, 26, 35, 0.4);
+            transition: transform 0.2s;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(226, 26, 35, 0.5);
+        }
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 30px 0;
+        }
+        .features {
+            background: rgba(11, 45, 117, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            color: #CBD5E1;
+            font-size: 14px;
+        }
+        .checkered-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            color: #FFCC33;
+        }
+        .footer {
+            background: rgba(8, 26, 58, 0.5);
+            padding: 30px;
+            text-align: center;
+            color: #94A3B8;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #FF6B00;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .security-note {
+            background: rgba(226, 26, 35, 0.1);
+            border-left: 3px solid #E21A23;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #CBD5E1;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0F0F0F; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <div class="container">
+                    <!-- Header -->
+                    <div class="header">
+                        <h2 class="logo">🏁 GarageCrew</h2>
+                        <p class="tagline">Your Ultimate Hot Wheels Collection Manager</p>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="content">
+                        <h1>🎉 Welcome to the Crew!</h1>
+
+                        <p>Hey there, collector!</p>
+
+                        <p>
+                            You're just <span class="highlight">one click away</span> from joining the ultimate Hot Wheels community.
+                            We're excited to have you on board! 🚗💨
+                        </p>
+
+                        <p>
+                            Click the button below to verify your email and start managing your collection like a pro:
+                        </p>
+
+                        <!-- CTA Button -->
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td align="center" style="padding: 20px 0;">
+                                    <a href="{{ .ConfirmationURL }}" class="cta-button">
+                                        Verify My Account 🏎️
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Features Box -->
+                        <div class="features">
+                            <p style="margin: 0 0 15px 0; color: #F7F7F7; font-weight: 600;">What awaits you:</p>
+                            <div class="feature-item">
+                                <span class="checkered-icon">🏁</span>
+                                <span>Organize your entire collection with photos & details</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="checkered-icon">📸</span>
+                                <span>Capture every model with our gallery feature</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="checkered-icon">🔍</span>
+                                <span>Search, filter & discover new models</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="checkered-icon">👥</span>
+                                <span>Connect with fellow collectors worldwide</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="checkered-icon">❤️</span>
+                                <span>Like & follow your favorite collections</span>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <!-- Security Note -->
+                        <div class="security-note">
+                            <strong>⚠️ Security First:</strong> If you didn't create an account with GarageCrew,
+                            please ignore this email. Your security is our priority.
+                        </div>
+
+                        <p style="font-size: 14px; color: #94A3B8;">
+                            <strong>Link not working?</strong> Copy and paste this URL into your browser:<br>
+                            <span style="word-break: break-all; color: #FF6B00;">{{ .ConfirmationURL }}</span>
+                        </p>
+
+                        <p style="font-size: 14px; color: #94A3B8; margin-top: 30px;">
+                            This verification link will expire in <strong style="color: #FFCC33;">24 hours</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="footer">
+                        <p style="margin: 0 0 10px 0;">
+                            <strong>GarageCrew</strong> - Built by collectors, for collectors
+                        </p>
+                        <p style="margin: 0 0 15px 0;">
+                            No ads. No compromises. Just pure collecting passion.
+                        </p>
+                        <p style="margin: 0;">
+                            Questions? Visit <a href="https://garagecrew.netlify.app">garagecrew.netlify.app</a>
+                        </p>
+                        <p style="margin: 15px 0 0 0; font-size: 12px;">
+                            © 2026 GarageCrew. All rights reserved.
+                        </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
