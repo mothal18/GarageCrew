@@ -80,6 +80,7 @@ flutter:
     - assets/images/logo_logowanie.png
     - assets/images/splash_screen.png
     - .env
+    - shorebird.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
