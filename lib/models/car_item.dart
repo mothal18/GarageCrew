@@ -44,12 +44,23 @@ class CarItem {
       toyNumber.length >= 3 ? toyNumber.substring(0, 3) : '';
 
   factory CarItem.fromMap(Map<String, dynamic> map) {
+    // Parse gallery_urls from database (PostgreSQL array)
+    final galleryUrlsRaw = map['gallery_urls'];
+    List<String> parsedGalleryUrls = [];
+    if (galleryUrlsRaw is List) {
+      parsedGalleryUrls = galleryUrlsRaw
+          .map((url) => url?.toString() ?? '')
+          .where((url) => url.isNotEmpty)
+          .toList();
+    }
+
     return CarItem(
       id: map['id']?.toString(),
       title: map['title'] as String? ?? '',
       description: map['description'] as String?,
       imageUrl: map['image_url'] as String?,
       createdAt: DateTime.tryParse(map['created_at']?.toString() ?? ''),
+      galleryUrls: parsedGalleryUrls,
       toyNumber: map['toy_number'] as String? ?? '',
       quantity: map['quantity'] as int? ?? 1,
       variant: map['variant'] as String?,
