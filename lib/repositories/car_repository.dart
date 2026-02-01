@@ -225,6 +225,9 @@ class CarRepository {
           .toSet()
           .toList();
 
+      // If no user IDs, return empty list (shouldn't happen but be defensive)
+      if (userIds.isEmpty) return [];
+
       // Batch fetch profiles (RLS automatically filters to public profiles)
       final profilesData = await _client
           .from('profiles')

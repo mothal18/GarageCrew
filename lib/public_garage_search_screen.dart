@@ -977,7 +977,8 @@ class _DiscoverFeedState extends State<_DiscoverFeed> {
       ErrorLogger.log(error, stackTrace: stackTrace, context: 'DiscoverFeed.loadRecentCars');
       if (!mounted) return;
       setState(() {
-        _errorMessage = AppLocalizations.of(context)!.discoverLoadFailed;
+        // Show detailed error for debugging
+        _errorMessage = 'DEBUG: ${error.toString()}';
         _isLoading = false;
       });
     }
