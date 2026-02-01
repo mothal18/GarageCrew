@@ -192,4 +192,30 @@ class CarRepository {
       rethrow;
     }
   }
+
+  /// Gets recently added cars from all users (global feed)
+  /// Returns cars with owner login information for Discover feed
+  Future<List<Map<String, dynamic>>> getRecentlyAddedCarsGlobal({
+    int limit = 50,
+  }) async {
+    try {
+      final data = await _client
+          .from(_tableName)
+          .select('''
+            *,
+            profiles!inner(login)
+          ''')
+          .order('created_at', ascending: false)
+          .limit(limit);
+
+      return (data as List<dynamic>).cast<Map<String, dynamic>>();
+    } catch (error, stackTrace) {
+      ErrorLogger.log(
+        error,
+        stackTrace: stackTrace,
+        context: 'CarRepository.getRecentlyAddedCarsGlobal',
+      );
+      rethrow;
+    }
+  }
 }

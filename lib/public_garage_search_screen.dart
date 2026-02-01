@@ -6,6 +6,7 @@ import 'package:garage_crew/l10n/app_localizations.dart';
 
 import 'models/car_item.dart';
 import 'repositories/car_image_repository.dart';
+import 'repositories/car_repository.dart';
 import 'repositories/follow_repository.dart';
 import 'repositories/like_repository.dart';
 import 'repositories/profile_repository.dart';
@@ -174,7 +175,9 @@ class _PublicGarageSearchScreenState extends State<PublicGarageSearchScreen> {
             ),
             const SizedBox(height: 12),
           ],
-          if (_searchController.text.trim().length < 2)
+          if (_searchController.text.trim().isEmpty)
+            const _DiscoverFeed()
+          else if (_searchController.text.trim().length < 2)
             Text(l10n.publicSearchHint),
           if (_isLoading) ...[
             const SizedBox(height: 16),
@@ -930,6 +933,221 @@ class _PublicProfile {
       id: map['id']?.toString() ?? '',
       login: map['login'] as String? ?? '',
       garageName: map['garage_name'] as String?,
+    );
+  }
+}
+
+class _DiscoverFeed extends StatefulWidget {
+  const _DiscoverFeed();
+
+  @override
+  State<_DiscoverFeed> createState() => _DiscoverFeedState();
+}
+
+class _DiscoverFeedState extends State<_DiscoverFeed> {
+  final _carRepository = CarRepository();
+  List<Map<String, dynamic>> _recentCars = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRecentCars();
+  }
+
+  Future<void> _loadRecentCars() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final cars = await _carRepository.getRecentlyAddedCarsGlobal(limit: 50);
+      if (!mounted) return;
+      setState(() {
+        _recentCars = cars;
+        _isLoading = false;
+      });
+    } catch (error, stackTrace) {
+      ErrorLogger.log(error, stackTrace: stackTrace, context: 'DiscoverFeed.loadRecentCars');
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = AppLocalizations.of(context)!.discoverLoadFailed;
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _openCarOwnerGarage(String userId, String login) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PublicGarageDetailScreen(
+          userId: userId,
+          login: login,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_isLoading) {
+      return const Padding(
+        padding: EdgeInsets.all(40),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(
+          _errorMessage!,
+          style: TextStyle(color: Theme.of(context).colorScheme.error),
+        ),
+      );
+    }
+
+    if (_recentCars.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Text(l10n.publicSearchNoResults),
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            'Discover New Models',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: _recentCars.length,
+          itemBuilder: (context, index) {
+            final carData = _recentCars[index];
+            final carItem = CarItem.fromMap(carData);
+            final userId = carData['user_id'] as String? ?? '';
+            final ownerLogin = carData['profiles']?['login'] as String? ?? 'Unknown';
+
+            return _DiscoverCarCard(
+              car: carItem,
+              ownerLogin: ownerLogin,
+              onTap: () => _openCarOwnerGarage(userId, ownerLogin),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _DiscoverCarCard extends StatelessWidget {
+  const _DiscoverCarCard({
+    required this.car,
+    required this.ownerLogin,
+    required this.onTap,
+  });
+
+  final CarItem car;
+  final String ownerLogin;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: Colors.grey[300],
+                child: car.imageUrl != null
+                    ? Image.network(
+                        car.imageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.directions_car,
+                          size: 48,
+                        ),
+                      )
+                    : const Icon(Icons.directions_car, size: 48),
+              ),
+            ),
+            // Info
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    car.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.person, size: 14, color: Colors.grey[600]),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          ownerLogin,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (car.likesCount > 0) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(Icons.favorite, size: 14, color: Colors.red),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${car.likesCount}',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

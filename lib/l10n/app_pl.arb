@@ -135,6 +135,8 @@
   "publicSearchTooltip": "Szukaj",
   "publicSearchHint": "Wpisz co najmniej 2 znaki, aby wyszukać garaż.",
   "publicSearchNoResults": "Brak wyników.",
+  "discoverRecentModels": "Odkryj Nowe Modele",
+  "discoverLoadFailed": "Nie udało się załadować ostatnich modeli.",
   "publicGarageSubtitle": "Publiczny garaż",
   "publicGaragesLoadFailed": "Nie udało się pobrać publicznych garaży.",
   "publicGarageCarsLoadFailed": "Nie udało się pobrać autek.",
