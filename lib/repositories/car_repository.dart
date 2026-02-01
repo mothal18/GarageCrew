@@ -200,10 +200,10 @@ class CarRepository {
     String? excludeUserId,
   }) async {
     try {
-      // Get recent cars
+      // Get recent cars with all fields including gallery_urls
       var query = _client
           .from(_tableName)
-          .select();
+          .select('*, gallery_urls');
 
       // Exclude current user's cars
       if (excludeUserId != null) {

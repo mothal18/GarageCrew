@@ -983,13 +983,10 @@ class _DiscoverFeedState extends State<_DiscoverFeed> {
     }
   }
 
-  void _openCarOwnerGarage(String userId, String login) {
+  void _openCarDetails(CarItem car) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PublicGarageDetailScreen(
-          userId: userId,
-          login: login,
-        ),
+        builder: (_) => _PublicCarDetailScreen(car: car),
       ),
     );
   }
@@ -1047,13 +1044,12 @@ class _DiscoverFeedState extends State<_DiscoverFeed> {
           itemBuilder: (context, index) {
             final carData = _recentCars[index];
             final carItem = CarItem.fromMap(carData);
-            final userId = carData['user_id'] as String? ?? '';
             final ownerLogin = carData['profiles']?['login'] as String? ?? 'Unknown';
 
             return _DiscoverCarCard(
               car: carItem,
               ownerLogin: ownerLogin,
-              onTap: () => _openCarOwnerGarage(userId, ownerLogin),
+              onTap: () => _openCarDetails(carItem),
             );
           },
         ),
