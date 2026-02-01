@@ -225,28 +225,33 @@ class CarRepository {
           .toSet()
           .toList();
 
-      // Batch fetch PUBLIC profiles only
+      // Batch fetch profiles with is_public flag
       final profilesData = await _client
           .from('profiles')
-          .select('id, login')
-          .eq('is_public', true)
+          .select('id, login, is_public')
           .inFilter('id', userIds);
 
-      final profilesMap = <String, String>{};
+      final profilesMap = <String, Map<String, dynamic>>{};
       for (final profile in profilesData as List) {
-        profilesMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
+        final id = profile['id'] as String;
+        final login = profile['login'] as String? ?? 'Unknown';
+        final isPublic = profile['is_public'] as bool? ?? false;
+        profilesMap[id] = {'login': login, 'is_public': isPublic};
       }
 
       // Filter cars - keep only from public profiles
       final publicCars = cars.where((car) {
         final userId = car['user_id'] as String?;
-        return userId != null && profilesMap.containsKey(userId);
+        if (userId == null) return false;
+        final profile = profilesMap[userId];
+        return profile != null && (profile['is_public'] as bool? ?? false);
       }).toList();
 
       // Merge login into car data
       for (final car in publicCars) {
         final userId = car['user_id'] as String?;
-        car['profiles'] = {'login': profilesMap[userId] ?? 'Unknown'};
+        final profile = profilesMap[userId];
+        car['profiles'] = {'login': profile?['login'] ?? 'Unknown'};
       }
 
       return publicCars;
