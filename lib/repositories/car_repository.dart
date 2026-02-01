@@ -199,16 +199,42 @@ class CarRepository {
     int limit = 50,
   }) async {
     try {
-      final data = await _client
+      // Get recent cars
+      final carsData = await _client
           .from(_tableName)
-          .select('''
-            *,
-            profiles!inner(login)
-          ''')
+          .select()
           .order('created_at', ascending: false)
           .limit(limit);
 
-      return (data as List<dynamic>).cast<Map<String, dynamic>>();
+      final cars = (carsData as List<dynamic>).cast<Map<String, dynamic>>();
+
+      if (cars.isEmpty) return [];
+
+      // Get unique user IDs
+      final userIds = cars
+          .map((car) => car['user_id'] as String?)
+          .where((id) => id != null)
+          .toSet()
+          .toList();
+
+      // Batch fetch profiles
+      final profilesData = await _client
+          .from('profiles')
+          .select('id, login')
+          .inFilter('id', userIds);
+
+      final profilesMap = <String, String>{};
+      for (final profile in profilesData as List) {
+        profilesMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
+      }
+
+      // Merge login into car data
+      for (final car in cars) {
+        final userId = car['user_id'] as String?;
+        car['profiles'] = {'login': profilesMap[userId] ?? 'Unknown'};
+      }
+
+      return cars;
     } catch (error, stackTrace) {
       ErrorLogger.log(
         error,
