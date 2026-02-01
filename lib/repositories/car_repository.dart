@@ -249,14 +249,27 @@ class CarRepository {
 
           // Convert car_images array to gallery_urls
           final carImages = car['car_images'] as List?;
+          final galleryUrls = <String>[];
+
           if (carImages != null && carImages.isNotEmpty) {
-            car['gallery_urls'] = carImages
-                .map((img) => img['image_url'] as String?)
-                .where((url) => url != null && url.isNotEmpty)
-                .toList();
-          } else {
-            car['gallery_urls'] = <String>[];
+            // Use images from car_images table
+            galleryUrls.addAll(
+              carImages
+                  .map((img) => img['image_url'] as String?)
+                  .where((url) => url != null && url.isNotEmpty)
+                  .cast<String>(),
+            );
           }
+
+          // Fallback to legacy image_url if no gallery images
+          if (galleryUrls.isEmpty) {
+            final legacyImageUrl = car['image_url'] as String?;
+            if (legacyImageUrl != null && legacyImageUrl.isNotEmpty) {
+              galleryUrls.add(legacyImageUrl);
+            }
+          }
+
+          car['gallery_urls'] = galleryUrls;
 
           // Remove car_images from result (no longer needed)
           car.remove('car_images');
