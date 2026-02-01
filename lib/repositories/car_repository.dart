@@ -200,10 +200,10 @@ class CarRepository {
     String? excludeUserId,
   }) async {
     try {
-      // Get recent cars - explicitly include all fields including gallery_urls array
+      // Get recent cars with images from car_images table (relation)
       var query = _client
           .from(_tableName)
-          .select('id, user_id, title, description, image_url, gallery_urls, toy_number, quantity, variant, created_at');
+          .select('id, user_id, title, description, image_url, toy_number, quantity, variant, created_at, car_images(image_url)');
 
       // Exclude current user's cars
       if (excludeUserId != null) {
@@ -240,12 +240,27 @@ class CarRepository {
         usersMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
       }
 
-      // Enrich cars with owner logins
+      // Enrich cars with owner logins and convert car_images to gallery_urls
       final result = <Map<String, dynamic>>[];
       for (final car in cars) {
         final userId = car['user_id'] as String?;
         if (userId != null && usersMap.containsKey(userId)) {
           car['profiles'] = {'login': usersMap[userId]};
+
+          // Convert car_images array to gallery_urls
+          final carImages = car['car_images'] as List?;
+          if (carImages != null && carImages.isNotEmpty) {
+            car['gallery_urls'] = carImages
+                .map((img) => img['image_url'] as String?)
+                .where((url) => url != null && url.isNotEmpty)
+                .toList();
+          } else {
+            car['gallery_urls'] = <String>[];
+          }
+
+          // Remove car_images from result (no longer needed)
+          car.remove('car_images');
+
           result.add(car);
         }
       }
