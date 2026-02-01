@@ -197,12 +197,20 @@ class CarRepository {
   /// Returns cars with owner login information for Discover feed
   Future<List<Map<String, dynamic>>> getRecentlyAddedCarsGlobal({
     int limit = 50,
+    String? excludeUserId,
   }) async {
     try {
       // Get recent cars
-      final carsData = await _client
+      var query = _client
           .from(_tableName)
-          .select()
+          .select();
+
+      // Exclude current user's cars
+      if (excludeUserId != null) {
+        query = query.neq('user_id', excludeUserId);
+      }
+
+      final carsData = await query
           .order('created_at', ascending: false)
           .limit(limit);
 

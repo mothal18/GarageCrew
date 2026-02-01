@@ -963,7 +963,11 @@ class _DiscoverFeedState extends State<_DiscoverFeed> {
     });
 
     try {
-      final cars = await _carRepository.getRecentlyAddedCarsGlobal(limit: 50);
+      final currentUserId = Supabase.instance.client.auth.currentUser?.id;
+      final cars = await _carRepository.getRecentlyAddedCarsGlobal(
+        limit: 50,
+        excludeUserId: currentUserId,
+      );
       if (!mounted) return;
       setState(() {
         _recentCars = cars;
@@ -1085,9 +1089,9 @@ class _DiscoverCarCard extends StatelessWidget {
               child: Container(
                 width: double.infinity,
                 color: Colors.grey[300],
-                child: car.imageUrl != null
+                child: car.primaryImageUrl != null
                     ? Image.network(
-                        car.imageUrl!,
+                        car.primaryImageUrl!,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.directions_car,
