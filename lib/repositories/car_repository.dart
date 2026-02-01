@@ -200,10 +200,10 @@ class CarRepository {
     String? excludeUserId,
   }) async {
     try {
-      // Get recent cars with all fields including gallery_urls
+      // Get recent cars with all fields
       var query = _client
           .from(_tableName)
-          .select('*, gallery_urls');
+          .select();
 
       // Exclude current user's cars
       if (excludeUserId != null) {
@@ -225,36 +225,29 @@ class CarRepository {
           .toSet()
           .toList();
 
-      // Batch fetch profiles with is_public flag
+      // Batch fetch profiles (RLS automatically filters to public profiles)
       final profilesData = await _client
           .from('profiles')
-          .select('id, login, is_public')
+          .select('id, login')
           .inFilter('id', userIds);
 
-      final profilesMap = <String, Map<String, dynamic>>{};
+      // Build map of user IDs to logins
+      final usersMap = <String, String>{};
       for (final profile in profilesData as List) {
-        final id = profile['id'] as String;
-        final login = profile['login'] as String? ?? 'Unknown';
-        final isPublic = profile['is_public'] as bool? ?? false;
-        profilesMap[id] = {'login': login, 'is_public': isPublic};
+        usersMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
       }
 
-      // Filter cars - keep only from public profiles
-      final publicCars = cars.where((car) {
+      // Enrich cars with owner logins
+      final result = <Map<String, dynamic>>[];
+      for (final car in cars) {
         final userId = car['user_id'] as String?;
-        if (userId == null) return false;
-        final profile = profilesMap[userId];
-        return profile != null && (profile['is_public'] as bool? ?? false);
-      }).toList();
-
-      // Merge login into car data
-      for (final car in publicCars) {
-        final userId = car['user_id'] as String?;
-        final profile = profilesMap[userId];
-        car['profiles'] = {'login': profile?['login'] ?? 'Unknown'};
+        if (userId != null && usersMap.containsKey(userId)) {
+          car['profiles'] = {'login': usersMap[userId]};
+          result.add(car);
+        }
       }
 
-      return publicCars;
+      return result;
     } catch (error, stackTrace) {
       ErrorLogger.log(
         error,
