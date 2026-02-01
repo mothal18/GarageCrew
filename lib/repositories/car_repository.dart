@@ -225,10 +225,11 @@ class CarRepository {
           .toSet()
           .toList();
 
-      // Batch fetch profiles
+      // Batch fetch PUBLIC profiles only
       final profilesData = await _client
           .from('profiles')
           .select('id, login')
+          .eq('is_public', true)
           .inFilter('id', userIds);
 
       final profilesMap = <String, String>{};
@@ -236,13 +237,19 @@ class CarRepository {
         profilesMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
       }
 
+      // Filter cars - keep only from public profiles
+      final publicCars = cars.where((car) {
+        final userId = car['user_id'] as String?;
+        return userId != null && profilesMap.containsKey(userId);
+      }).toList();
+
       // Merge login into car data
-      for (final car in cars) {
+      for (final car in publicCars) {
         final userId = car['user_id'] as String?;
         car['profiles'] = {'login': profilesMap[userId] ?? 'Unknown'};
       }
 
-      return cars;
+      return publicCars;
     } catch (error, stackTrace) {
       ErrorLogger.log(
         error,
