@@ -12,6 +12,7 @@ import 'repositories/like_repository.dart';
 import 'repositories/profile_repository.dart';
 import 'services/error_logger.dart';
 import 'utils/date_formatter.dart';
+import 'utils/postgrest_sanitizer.dart';
 import 'widgets/car_image_gallery.dart';
 import 'widgets/car_thumbnail.dart';
 import 'widgets/labeled_car_grid_item.dart';
@@ -65,11 +66,12 @@ class _PublicGarageSearchScreenState extends State<PublicGarageSearchScreen> {
     });
 
     try {
+      final safeQuery = PostgrestSanitizer.sanitize(query);
       final request = Supabase.instance.client
           .from(_profilesTable)
           .select('id, login, garage_name')
           .eq('is_public', true)
-          .or('login.ilike.%$query%,garage_name.ilike.%$query%');
+          .or('login.ilike.%$safeQuery%,garage_name.ilike.%$safeQuery%');
       final data = await (currentUserId == null
           ? request.order('login', ascending: true)
           : request.neq('id', currentUserId).order('login', ascending: true));

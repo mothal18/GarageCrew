@@ -19,15 +19,15 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   static final RegExp _loginRegex = RegExp(r'^[a-z0-9_]{3,20}$');
   final _formKey = GlobalKey<FormState>();
-  final loginController = TextEditingController();
-  final passwordController = TextEditingController();
-  bool isLoading = false;
-  String? errorMessage;
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
-    loginController.dispose();
-    passwordController.dispose();
+    _loginController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -37,15 +37,15 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
     setState(() {
-      isLoading = true;
-      errorMessage = null;
+      _isLoading = true;
+      _errorMessage = null;
     });
 
     try {
-      final login = loginController.text.trim().toLowerCase();
+      final login = _loginController.text.trim().toLowerCase();
       final response = await Supabase.instance.client.functions.invoke(
         'login-with-login',
-        body: {'login': login, 'password': passwordController.text.trim()},
+        body: {'login': login, 'password': _passwordController.text.trim()},
       );
       final data = response.data;
       final decoded = data is String ? jsonDecode(data) as Object? : data;
@@ -54,7 +54,7 @@ class _AuthScreenState extends State<AuthScreen> {
           : null;
       if (refreshToken == null || refreshToken.isEmpty) {
         setState(() {
-          errorMessage = AppLocalizations.of(context)!.authSignInFailed;
+          _errorMessage = AppLocalizations.of(context)!.authSignInFailed;
         });
         return;
       }
@@ -73,22 +73,22 @@ class _AuthScreenState extends State<AuthScreen> {
         )!.authSignInFailedWithCode(e.status.toString());
       }
       setState(() {
-        errorMessage = message;
+        _errorMessage = message;
       });
     } on AuthException catch (e) {
       setState(() {
-        errorMessage = e.message;
+        _errorMessage = e.message;
       });
     } catch (e) {
       setState(() {
-        errorMessage = AppLocalizations.of(
+        _errorMessage = AppLocalizations.of(
           context,
         )!.authSignInFailedWithDetails(e.toString());
       });
     } finally {
       if (mounted) {
         setState(() {
-          isLoading = false;
+          _isLoading = false;
         });
       }
     }
@@ -175,7 +175,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       ),
                                       const SizedBox(height: 24),
                                       TextFormField(
-                                        controller: loginController,
+                                        controller: _loginController,
                                         decoration: InputDecoration(
                                           labelText: l10n.authLoginLabel,
                                           prefixIcon: const Icon(
@@ -200,7 +200,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       ),
                                       const SizedBox(height: 16),
                                       TextFormField(
-                                        controller: passwordController,
+                                        controller: _passwordController,
                                         decoration: InputDecoration(
                                           labelText: l10n.authPasswordLabel,
                                           prefixIcon: const Icon(
@@ -225,9 +225,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                         },
                                       ),
                                       const SizedBox(height: 16),
-                                      if (errorMessage != null) ...[
+                                      if (_errorMessage != null) ...[
                                         Text(
-                                          errorMessage!,
+                                          _errorMessage!,
                                           style: TextStyle(
                                             color: colorScheme.error,
                                             fontWeight: FontWeight.w600,
@@ -235,7 +235,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                         ),
                                         const SizedBox(height: 8),
                                       ],
-                                      if (isLoading)
+                                      if (_isLoading)
                                         const Center(
                                           child: CircularProgressIndicator(),
                                         )

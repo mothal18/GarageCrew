@@ -93,6 +93,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerHaveAccount => 'Already have an account? Sign in';
 
   @override
+  String get registerSuccessTitle => 'Success!';
+
+  @override
   String get registerCreatedCheckEmail =>
       'Account created. Check your email to confirm.';
 
@@ -339,6 +342,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get publicSearchNoResults => 'No results.';
 
   @override
+  String get discoverRecentModels => 'Discover New Models';
+
+  @override
+  String get discoverLoadFailed => 'Failed to load recent models.';
+
+  @override
   String get publicGarageSubtitle => 'Public garage';
 
   @override
@@ -457,6 +466,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String maxImagesReached(Object count) {
     return 'Maximum $count images';
+  }
+
+  @override
+  String imageUploadPartialFailure(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'images',
+      one: 'image',
+    );
+    return '$count $_temp0 failed to upload.';
   }
 
   @override
