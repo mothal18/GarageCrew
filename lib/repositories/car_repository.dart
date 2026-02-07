@@ -194,16 +194,22 @@ class CarRepository {
   }
 
   /// Gets recently added cars from all users (global feed)
-  /// Returns cars with owner login information for Discover feed
+  /// Returns cars with owner login information for Discover feed.
+  ///
+  /// Uses a single query with embedded joins for profiles and car_images
+  /// to avoid N+1 query issues.
   Future<List<Map<String, dynamic>>> getRecentlyAddedCarsGlobal({
     int limit = 50,
     String? excludeUserId,
   }) async {
     try {
-      // Get recent cars with images from car_images table (relation)
+      // Single query: join car_images and profiles via foreign key
       var query = _client
           .from(_tableName)
-          .select('id, user_id, title, description, image_url, toy_number, quantity, variant, created_at, car_images(image_url)');
+          .select('id, user_id, title, description, image_url, toy_number, '
+              'quantity, variant, created_at, '
+              'car_images(image_url), '
+              'profiles!garage_cars_user_id_fkey(login)');
 
       // Exclude current user's cars
       if (excludeUserId != null) {
@@ -218,64 +224,45 @@ class CarRepository {
 
       if (cars.isEmpty) return [];
 
-      // Get unique user IDs
-      final userIds = cars
-          .map((car) => car['user_id'] as String?)
-          .where((id) => id != null)
-          .toSet()
-          .toList();
-
-      // If no user IDs, return empty list (shouldn't happen but be defensive)
-      if (userIds.isEmpty) return [];
-
-      // Batch fetch profiles (RLS automatically filters to public profiles)
-      final profilesData = await _client
-          .from('profiles')
-          .select('id, login')
-          .inFilter('id', userIds);
-
-      // Build map of user IDs to logins
-      final usersMap = <String, String>{};
-      for (final profile in profilesData as List) {
-        usersMap[profile['id'] as String] = profile['login'] as String? ?? 'Unknown';
-      }
-
-      // Enrich cars with owner logins and convert car_images to gallery_urls
+      // Process results: convert nested joins to flat structure
       final result = <Map<String, dynamic>>[];
       for (final car in cars) {
-        final userId = car['user_id'] as String?;
-        if (userId != null && usersMap.containsKey(userId)) {
-          car['profiles'] = {'login': usersMap[userId]};
+        // Extract profile login from joined data
+        final profileData = car['profiles'] as Map<String, dynamic>?;
+        final login = profileData?['login'] as String?;
 
-          // Convert car_images array to gallery_urls
-          final carImages = car['car_images'] as List?;
-          final galleryUrls = <String>[];
+        // Skip cars without a public profile
+        if (login == null || login.isEmpty) continue;
 
-          if (carImages != null && carImages.isNotEmpty) {
-            // Use images from car_images table
-            galleryUrls.addAll(
-              carImages
-                  .map((img) => img['image_url'] as String?)
-                  .where((url) => url != null && url.isNotEmpty)
-                  .cast<String>(),
-            );
-          }
+        car['profiles'] = {'login': login};
 
-          // Fallback to legacy image_url if no gallery images
-          if (galleryUrls.isEmpty) {
-            final legacyImageUrl = car['image_url'] as String?;
-            if (legacyImageUrl != null && legacyImageUrl.isNotEmpty) {
-              galleryUrls.add(legacyImageUrl);
-            }
-          }
+        // Convert car_images array to gallery_urls
+        final carImages = car['car_images'] as List?;
+        final galleryUrls = <String>[];
 
-          car['gallery_urls'] = galleryUrls;
-
-          // Remove car_images from result (no longer needed)
-          car.remove('car_images');
-
-          result.add(car);
+        if (carImages != null && carImages.isNotEmpty) {
+          galleryUrls.addAll(
+            carImages
+                .map((img) => img['image_url'] as String?)
+                .where((url) => url != null && url.isNotEmpty)
+                .cast<String>(),
+          );
         }
+
+        // Fallback to legacy image_url if no gallery images
+        if (galleryUrls.isEmpty) {
+          final legacyImageUrl = car['image_url'] as String?;
+          if (legacyImageUrl != null && legacyImageUrl.isNotEmpty) {
+            galleryUrls.add(legacyImageUrl);
+          }
+        }
+
+        car['gallery_urls'] = galleryUrls;
+
+        // Remove joined data no longer needed
+        car.remove('car_images');
+
+        result.add(car);
       }
 
       return result;

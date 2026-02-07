@@ -192,6 +192,7 @@
       "count": {}
     }
   },
+  "imageUploadPartialFailure": "{count, plural, =1{1 zdjęcie nie zostało przesłane.} other{{count} zdjęć nie zostało przesłanych.}}",
   "imageUploading": "Przesyłanie...",
   "reorderImages": "Przeciągnij, aby zmienić kolejność",
   "carImagesSection": "Zdjęcia autka",

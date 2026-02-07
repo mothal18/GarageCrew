@@ -254,6 +254,12 @@ abstract class AppLocalizations {
   /// **'Already have an account? Sign in'**
   String get registerHaveAccount;
 
+  /// No description provided for @registerSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Success!'**
+  String get registerSuccessTitle;
+
   /// No description provided for @registerCreatedCheckEmail.
   ///
   /// In en, this message translates to:
@@ -716,6 +722,18 @@ abstract class AppLocalizations {
   /// **'No results.'**
   String get publicSearchNoResults;
 
+  /// No description provided for @discoverRecentModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover New Models'**
+  String get discoverRecentModels;
+
+  /// No description provided for @discoverLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recent models.'**
+  String get discoverLoadFailed;
+
   /// No description provided for @publicGarageSubtitle.
   ///
   /// In en, this message translates to:
@@ -931,6 +949,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maximum {count} images'**
   String maxImagesReached(Object count);
+
+  /// No description provided for @imageUploadPartialFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} {count, plural, =1{image} other{images}} failed to upload.'**
+  String imageUploadPartialFailure(num count);
 
   /// No description provided for @imageUploading.
   ///
