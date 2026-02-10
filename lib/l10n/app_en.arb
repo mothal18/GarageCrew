@@ -192,6 +192,14 @@
       "count": {}
     }
   },
+  "imageUploadPartialFailure": "{count} {count, plural, =1{image} other{images}} failed to upload.",
+  "@imageUploadPartialFailure": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "imageUploading": "Uploading...",
   "reorderImages": "Drag to reorder",
   "carImagesSection": "Car images",

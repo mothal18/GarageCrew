@@ -239,15 +239,18 @@ class _CarListScreenState extends State<CarListScreen> {
 
       // Upload pending files and collect all image URLs
       final allImageUrls = <String>[...result.car.galleryUrls];
+      var failedUploads = 0;
 
       for (final file in result.pendingFiles) {
-        final uploadedUrl = await _storageService.uploadCarImage(
-          file,
-          user.id,
-          carId,
-        );
-        if (uploadedUrl != null) {
+        try {
+          final uploadedUrl = await _storageService.uploadCarImage(
+            file,
+            user.id,
+            carId,
+          );
           allImageUrls.add(uploadedUrl);
+        } catch (_) {
+          failedUploads++;
         }
       }
 
@@ -265,6 +268,16 @@ class _CarListScreenState extends State<CarListScreen> {
       setState(() {
         _cars.insert(0, carWithGallery);
       });
+
+      // Warn user about failed uploads
+      if (failedUploads > 0 && mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.imageUploadPartialFailure(failedUploads)),
+          ),
+        );
+      }
     } catch (error) {
       if (!mounted) {
         return;
@@ -307,15 +320,18 @@ class _CarListScreenState extends State<CarListScreen> {
 
       // Upload pending files and collect all image URLs
       final allImageUrls = <String>[...result.car.galleryUrls];
+      var failedUploads = 0;
 
       for (final file in result.pendingFiles) {
-        final uploadedUrl = await _storageService.uploadCarImage(
-          file,
-          user.id,
-          carId,
-        );
-        if (uploadedUrl != null) {
+        try {
+          final uploadedUrl = await _storageService.uploadCarImage(
+            file,
+            user.id,
+            carId,
+          );
           allImageUrls.add(uploadedUrl);
+        } catch (_) {
+          failedUploads++;
         }
       }
 
@@ -337,6 +353,16 @@ class _CarListScreenState extends State<CarListScreen> {
           _cars[index] = carWithGallery;
         }
       });
+
+      // Warn user about failed uploads
+      if (failedUploads > 0 && mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.imageUploadPartialFailure(failedUploads)),
+          ),
+        );
+      }
     } catch (error, stackTrace) {
       ErrorLogger.log(error, stackTrace: stackTrace, context: 'updateCarWithImages');
       if (!mounted) {

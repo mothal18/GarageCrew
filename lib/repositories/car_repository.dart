@@ -252,7 +252,6 @@ class CarRepository {
           final galleryUrls = <String>[];
 
           if (carImages != null && carImages.isNotEmpty) {
-            // Use images from car_images table
             galleryUrls.addAll(
               carImages
                   .map((img) => img['image_url'] as String?)

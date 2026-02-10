@@ -328,16 +328,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           user.id,
         );
 
-        if (uploadedUrl != null) {
-          await _repository.updateAvatarUrl(user.id, uploadedUrl);
-          if (!mounted) return;
-          setState(() {
-            _avatarUrl = uploadedUrl;
-            _avatarUrlController.text = uploadedUrl;
-          });
-        } else {
-          throw Exception('Upload failed');
-        }
+        await _repository.updateAvatarUrl(user.id, uploadedUrl);
+        if (!mounted) return;
+        setState(() {
+          _avatarUrl = uploadedUrl;
+          _avatarUrlController.text = uploadedUrl;
+        });
       } catch (error, stackTrace) {
         ErrorLogger.log(error, stackTrace: stackTrace, context: 'uploadAvatar');
         if (!mounted) return;
@@ -556,6 +552,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         TextField(
                           controller: _garageNameController,
                           textInputAction: TextInputAction.done,
+                          maxLength: 50,
                           onSubmitted: (_) => _saveGarageName(),
                           decoration: InputDecoration(
                             labelText: l10n.garageNameLabel,

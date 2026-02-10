@@ -93,6 +93,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get registerHaveAccount => 'Masz już konto? Zaloguj się';
 
   @override
+  String get registerSuccessTitle => 'Sukces!';
+
+  @override
   String get registerCreatedCheckEmail =>
       'Konto utworzone. Sprawdź maila, aby potwierdzić konto.';
 
@@ -341,6 +344,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get publicSearchNoResults => 'Brak wyników.';
 
   @override
+  String get discoverRecentModels => 'Odkryj Nowe Modele';
+
+  @override
+  String get discoverLoadFailed => 'Nie udało się załadować ostatnich modeli.';
+
+  @override
   String get publicGarageSubtitle => 'Publiczny garaż';
 
   @override
@@ -461,6 +470,17 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String maxImagesReached(Object count) {
     return 'Maksymalnie $count zdjęć';
+  }
+
+  @override
+  String imageUploadPartialFailure(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zdjęć nie zostało przesłanych.',
+      one: '1 zdjęcie nie zostało przesłane.',
+    );
+    return '$_temp0';
   }
 
   @override

@@ -14,13 +14,13 @@ class RealtimeNotificationService {
   RealtimeChannel? _channel;
   String? _currentUserId;
 
-  StreamController<int>? _unreadCountController;
-  Stream<int> get unreadCountStream =>
-      (_unreadCountController ??= StreamController<int>.broadcast()).stream;
+  // Stream controllers are kept alive for the singleton's lifetime to avoid
+  // breaking listeners on user switch. Only the channel is unsubscribed.
+  final _unreadCountController = StreamController<int>.broadcast();
+  Stream<int> get unreadCountStream => _unreadCountController.stream;
 
-  StreamController<NotificationItem>? _newNotificationController;
-  Stream<NotificationItem> get newNotificationStream =>
-      (_newNotificationController ??= StreamController<NotificationItem>.broadcast()).stream;
+  final _newNotificationController = StreamController<NotificationItem>.broadcast();
+  Stream<NotificationItem> get newNotificationStream => _newNotificationController.stream;
 
   GlobalKey<NavigatorState>? _navigatorKey;
 
@@ -33,12 +33,13 @@ class RealtimeNotificationService {
       return; // Already subscribed for this user
     }
 
-    await dispose();
+    // Unsubscribe previous channel without closing stream controllers
+    await _unsubscribeChannel();
     _currentUserId = userId;
 
     // Load initial unread count
     final count = await _notificationRepository.getUnreadCount(userId);
-    _unreadCountController?.add(count);
+    _unreadCountController.add(count);
 
     // Subscribe to realtime changes
     _channel = Supabase.instance.client
@@ -63,7 +64,7 @@ class RealtimeNotificationService {
 
     try {
       final notification = NotificationItem.fromMap(newRecord);
-      _newNotificationController?.add(notification);
+      _newNotificationController.add(notification);
 
       // Update unread count
       _refreshUnreadCount();
@@ -72,7 +73,6 @@ class RealtimeNotificationService {
       _showNotificationBanner(notification);
     } catch (error, stackTrace) {
       ErrorLogger.log(error, stackTrace: stackTrace, context: 'handleRealtimeNotification');
-      // Ignore parsing errors (don't show to user)
     }
   }
 
@@ -81,10 +81,9 @@ class RealtimeNotificationService {
 
     try {
       final count = await _notificationRepository.getUnreadCount(_currentUserId!);
-      _unreadCountController?.add(count);
+      _unreadCountController.add(count);
     } catch (error, stackTrace) {
       ErrorLogger.log(error, stackTrace: stackTrace, context: 'refreshUnreadCount');
-      // Ignore errors (don't show to user)
     }
   }
 
@@ -149,15 +148,18 @@ class RealtimeNotificationService {
     _refreshUnreadCount();
   }
 
-  Future<void> dispose() async {
+  /// Unsubscribes the realtime channel without closing stream controllers.
+  Future<void> _unsubscribeChannel() async {
     await _channel?.unsubscribe();
     _channel = null;
     _currentUserId = null;
+  }
 
-    // Close stream controllers to prevent memory leaks
-    await _unreadCountController?.close();
-    _unreadCountController = null;
-    await _newNotificationController?.close();
-    _newNotificationController = null;
+  /// Disposes the realtime channel subscription.
+  ///
+  /// Stream controllers are kept alive since this is a singleton - they will
+  /// be re-used on the next [initialize] call.
+  Future<void> dispose() async {
+    await _unsubscribeChannel();
   }
 }
